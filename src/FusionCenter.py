@@ -1,5 +1,6 @@
 class FusionCenter:
-    __sensors = []
+    def __init__(self):
+        self.__sensors = []
 
     def convexCombination(self):
         for sensor in self.__sensors:

@@ -1,9 +1,12 @@
+import numpy as np
+
+
 class KalmanFilter:
     def __init__(self):
         return
 
     def predict(self):
-        return 1
+        return np.array([1, 1])
 
     def update(self, z):
         return

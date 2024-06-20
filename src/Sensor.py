@@ -1,13 +1,15 @@
 import numpy as np
+import matplotlib.pyplot as plt
 from KalmanFilter import KalmanFilter
 
 
 class Sensor:
-    kalmanFilter = KalmanFilter()
-    measurements = []
-    predictions = []
 
-    def __init__(self, target):
+    def __init__(self, target, name):
+        self.__name = name
+        self.__kalmanFilter = KalmanFilter()
+        self.__measurements = []
+        self.__predictions = []
         self.__target = target
 
     def noise(self):
@@ -20,12 +22,21 @@ class Sensor:
 
     def measure(self):
         measurement = np.matmul(self.H(), self.__target.state()) + self.noise()
-        self.measurements.append(measurement)
+        self.__measurements.append(measurement)
         return measurement
 
     def filter(self, measurement):
-        self.predictions.append(self.kalmanFilter.predict())
-        self.kalmanFilter.update(0)
+        self.__predictions.append(self.__kalmanFilter.predict())
+        self.__kalmanFilter.update(0)
 
     def getLastPrediction(self):
-        return self.predictions[:-1]
+        return self.__predictions[:-1]
+
+    def plot(self):
+        plt.plot(range(len(self.__target.positions())), np.array(self.__target.positions()),
+                 label='True target positions')
+        plt.plot(range(len(self.__measurements)), np.array(self.__measurements), label='Sensor measurements')
+        plt.plot(range(len(self.__predictions)), np.array(self.__predictions), label='Kalman filter prediction')
+        plt.legend()
+        plt.title(self.__name)
+        plt.show()
