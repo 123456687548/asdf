@@ -12,6 +12,7 @@
   - Its estimate is sent to fusion center (FC) instance.
     1) The FC uses the convex combination for Track-to-Track Fusion
     2) The FC uses Tracklet Fusion
+
 Also Federated Kalman Filter
 
 ## Usage
