@@ -24,8 +24,9 @@ class DistributedKalmanFilter:
 
     def getPosteriorCov(self):
         return self.__posteriorCov
+
     def getResults(self):
         return self.__results
 
     def getLastResult(self):
-        return self.__results[:-1]
+        return self.__results[-1]

@@ -22,7 +22,6 @@ class FederatedKalmanFilter:
     def update(self, z):
         return
 
-
     def getPosteriorCov(self):
         return self.__posteriorCov
 
@@ -30,4 +29,4 @@ class FederatedKalmanFilter:
         return self.__results
 
     def getLastResult(self):
-        return self.__results[:-1]
+        return self.__results[-1]
