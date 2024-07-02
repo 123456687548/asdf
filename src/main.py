@@ -7,7 +7,7 @@ SAMPLES = 100
 
 
 def main():
-    target = Target([1, 2], [1, 1])
+    target = Target([50, 100], [0, 10])
     fusionCenter = FusionCenter()
     sensors = []
 
@@ -20,9 +20,8 @@ def main():
     for _ in range(0, SAMPLES):
         for sensor in sensors:
             measurement = sensor.measure()
-            sensor.filter(measurement)
+            sensor.kalmanFilter(measurement)
 
-        fusionCenter.trackletFusion()
         fusionCenter.convexCombination()
 
         target.move()

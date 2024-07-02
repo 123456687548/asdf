@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from KalmanFilter import KalmanFilter
+from FederatedKalmanFilter import FederatedKalmanFilter
+from DistributedKalmanFilter import DistributedKalmanFilter
 
 
 class Sensor:
@@ -8,35 +10,43 @@ class Sensor:
     def __init__(self, target, name):
         self.__name = name
         self.__kalmanFilter = KalmanFilter()
+        self.__federatedKalmanFilter = FederatedKalmanFilter()
+        self.__distributedKalmanFilter = DistributedKalmanFilter()
         self.__measurements = []
-        self.__predictions = []
         self.__target = target
 
     def noise(self):
-        # todo
-        return 0
+        return np.random.multivariate_normal([0,0], [[10,0],[0,10]])
 
     def H(self):
         """Measurement function"""
         return np.array([[1, 0, 0, 0], [0, 1, 0, 0]])
 
     def measure(self):
-        measurement = np.matmul(self.H(), self.__target.state()) + self.noise()
+        noise = self.noise()
+        measurement = np.matmul(self.H(), self.__target.state()) + noise
         self.__measurements.append(measurement)
         return measurement
 
-    def filter(self, measurement):
-        self.__predictions.append(self.__kalmanFilter.predict())
-        self.__kalmanFilter.update(0)
+    def kalmanFilter(self, measurement):
+        if not self.__kalmanFilter.isInitialized():
+            self.__kalmanFilter.initialize(measurement)
+        self.__kalmanFilter.predict()
+        self.__kalmanFilter.update(measurement)
 
-    def getLastPrediction(self):
-        return self.__predictions[:-1]
+    
 
     def plot(self):
-        plt.plot(range(len(self.__target.positions())), np.array(self.__target.positions()),
+        x = [result[0] for result in self.__kalmanFilter.getResults()]
+        y = [result[1] for result in self.__kalmanFilter.getResults()]
+        plt.plot([position[0] for position in self.__target.positions()[:-1]] , [position[1] for position in self.__target.positions()[:-1]],
                  label='True target positions')
-        plt.plot(range(len(self.__measurements)), np.array(self.__measurements), label='Sensor measurements')
-        plt.plot(range(len(self.__predictions)), np.array(self.__predictions), label='Kalman filter prediction')
+        plt.plot([measurement[0] for measurement in self.__measurements], [measurement[1] for measurement in self.__measurements], label='Sensor measurements')
+        plt.plot([result[0] for result in self.__kalmanFilter.getResults()], [result[1] for result in self.__kalmanFilter.getResults()], label='Kalman filter')
+    
+        plt.gca().set_xlim(0, 100)
+        plt.gca().set_ylim(0, 2000)
         plt.legend()
         plt.title(self.__name)
         plt.show()
+        plt.savefig(f'{self.__name}.png')
