@@ -43,9 +43,10 @@ class Sensor:
                  label='True target positions')
         plt.plot([measurement[0] for measurement in self.__measurements], [measurement[1] for measurement in self.__measurements], label='Sensor measurements')
         plt.plot([result[0] for result in self.__kalmanFilter.getResults()], [result[1] for result in self.__kalmanFilter.getResults()], label='Kalman filter')
+        plt.plot([prior[0] for prior in self.__kalmanFilter.getPriors()], [prior[1] for prior in self.__kalmanFilter.getPriors()], label='Kalman prediction')
     
-        plt.gca().set_xlim(0, 100)
-        plt.gca().set_ylim(0, 2000)
+        #plt.gca().set_xlim(0, 100)
+        #plt.gca().set_ylim(0, 2000)
         plt.legend()
         plt.title(self.__name)
         plt.show()

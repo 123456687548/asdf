@@ -6,6 +6,7 @@ class KalmanFilter:
         self.__initalized = False
         self.__results = []
         self.__prior = []
+        self.__priors = []
         self.__priorCov = []
         self.__posterior = []
         self.__posteriorCov = []
@@ -23,13 +24,15 @@ class KalmanFilter:
 
     def predict(self):
         F = np.array([[1, 0.002],[0.0008, 1]])
-        Q = np.array([[0.02, 0.02], [0.02, 0]])
+        Q = np.array([[10, 0.02], [0.02, 10]])
+        
         
         self.__prior = np.dot(F, self.__previousPosterior)
+        self.__priors.append(self.__prior)
         self.__priorCov = np.dot(F, np.dot(self.__previousPosteriorCov, F.T)) + Q
 
     def update(self, measurement): 
-        R = np.array([[0.06, 0], [0, 0.06]]) 
+        R = np.array([[10, 0], [0, 10]]) 
         H = np.array([[1, 0], [0, 1]])
         v = measurement - np.dot(H, self.__prior)
         S = np.dot(H, np.dot(self.__priorCov, H.T)) + R
@@ -42,6 +45,8 @@ class KalmanFilter:
         self.__previousPosterior = self.__posterior
         self.__previousPosteriorCov = self.__posteriorCov
 
+    def getPriors(self):
+        return self.__priors
     
     def getResults(self):
         return self.__results
