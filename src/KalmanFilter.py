@@ -47,8 +47,11 @@ class KalmanFilter:
     def getPriors(self):
         return self.__priors
 
+    def getPosteriorCov(self):
+        return self.__posteriorCov
+
     def getResults(self):
         return self.__results
 
     def getLastResult(self):
-        return self.__results[:-1]
+        return np.array(self.__results[-1])

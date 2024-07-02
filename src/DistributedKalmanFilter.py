@@ -3,19 +3,29 @@ import numpy as np
 
 class DistributedKalmanFilter:
     def __init__(self):
-        self.__predictions = []
+        self.__initalized = False
+        self.__results = []
+        self.__prior = []
+        self.__priors = []
+        self.__priorCov = []
+        self.__posterior = []
+        self.__posteriorCov = []
+        self.__previousPosterior = []
+        self.__previousPosteriorCov = []
         return
 
     def predict(self):
         prediction = np.array([1, 1])
 
-        self.__predictions.append(prediction)
+        self.__results.append(prediction)
 
     def update(self, z):
         return
 
-    def getPredictions(self):
-        return self.__predictions
+    def getPosteriorCov(self):
+        return self.__posteriorCov
+    def getResults(self):
+        return self.__results
 
-    def getLastPrediction(self):
-        return self.__predictions[:-1]
+    def getLastResult(self):
+        return self.__results[:-1]

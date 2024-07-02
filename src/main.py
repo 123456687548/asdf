@@ -1,6 +1,8 @@
 from Target import Target
 from Sensor import Sensor
 from FusionCenter import FusionCenter
+from Modus import FilterModus
+import matplotlib.pyplot as plt
 
 SENSOR_AMOUNT = 4
 SAMPLES = 100
@@ -10,6 +12,7 @@ def main():
     target = Target([50, 100], [2, 10])
     fusionCenter = FusionCenter()
     sensors = []
+    kalmanFusions = []
 
     # create Sensors
     for i in range(0, SENSOR_AMOUNT):
@@ -22,10 +25,18 @@ def main():
             measurement = sensor.measure()
             sensor.kalmanFilter(measurement)
 
-        fusionCenter.convexCombination()
+        kalmanFusion = fusionCenter.convexCombination(FilterModus.KALMAN_FILTER)
+        kalmanFusions.append(kalmanFusion)
 
         target.move()
 
+    plt.plot([position[0] for position in target.positions()[:-1]],
+             [position[1] for position in target.positions()[:-1]],
+             label='True target positions')
+    plt.plot([position[0] for position in kalmanFusions],
+             [position[1] for position in kalmanFusions],
+             label='Fusion')
+    plt.show()
     sensors[0].plot()
 
 

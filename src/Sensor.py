@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from KalmanFilter import KalmanFilter
 from FederatedKalmanFilter import FederatedKalmanFilter
 from DistributedKalmanFilter import DistributedKalmanFilter
+from Modus import FilterModus
 
 
 class Sensor:
@@ -34,6 +35,24 @@ class Sensor:
         self.__kalmanFilter.predict()
         self.__kalmanFilter.update(measurement)
 
+    def getLastPosterior(self, modus):
+        match modus:
+            case FilterModus.KALMAN_FILTER:
+                return self.__kalmanFilter.getLastResult()
+            case FilterModus.DISTRIBUTED_KALMAN_FILTER:
+                return self.__distributedKalmanFilter.getLastResult()
+            case FilterModus.FEDERATED_KALMAN_FILTER:
+                return self.__federatedKalmanFilter.getLastResult()
+
+    def getLastPosteriorCov(self, modus):
+        match modus:
+            case FilterModus.KALMAN_FILTER:
+                return self.__kalmanFilter.getPosteriorCov()
+            case FilterModus.DISTRIBUTED_KALMAN_FILTER:
+                return self.__distributedKalmanFilter.getPosteriorCov()
+            case FilterModus.FEDERATED_KALMAN_FILTER:
+                return self.__federatedKalmanFilter.getPosteriorCov()
+
     def plot(self):
         plt.plot([position[0] for position in self.__target.positions()[:-1]],
                  [position[1] for position in self.__target.positions()[:-1]],
@@ -45,8 +64,6 @@ class Sensor:
         plt.plot([result[0] for result in self.__kalmanFilter.getResults()],
                  [result[1] for result in self.__kalmanFilter.getResults()], label='Kalman filter')
 
-
         plt.legend()
         plt.title(self.__name)
-        plt.show()
         plt.savefig(f'{self.__name}.png')

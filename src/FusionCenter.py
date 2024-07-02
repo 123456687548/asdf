@@ -1,21 +1,22 @@
 import numpy as np
 
+
 class FusionCenter:
     def __init__(self):
         self.__sensors = []
-        self.__
 
-    def convexCombination(self):
+    def convexCombination(self, modus):
         fused_x = 0
         fused_P = 0
         for sensor in self.__sensors:
-            fused_P += np.linalg.inv(sensor.getKalmanFilter().getLastPosterior())
+            cov = sensor.getLastPosteriorCov(modus)
+            fused_P += np.linalg.inv(cov)
 
         fused_P = np.linalg.inv(fused_P)
 
         for sensor in self.__sensors:
-            x = sensor.getKalmanFilter().getLastResult()
-            fused_x += np.dot(np.linalg.inv(sensor.getKalmanFilter().getLastPosterior(), x))
+            x = sensor.getLastPosterior(modus)
+            fused_x += np.dot(np.linalg.inv(sensor.getLastPosteriorCov(modus)), x)
 
         fused_x = np.dot(fused_P, fused_x)
 
