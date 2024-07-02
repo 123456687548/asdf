@@ -16,7 +16,7 @@ class Sensor:
         self.__target = target
 
     def noise(self):
-        return np.random.multivariate_normal([0,0], [[10,0],[0,10]])
+        return np.random.multivariate_normal([0, 0], np.array([[10, 0], [0, 10]]))
 
     def H(self):
         """Measurement function"""
@@ -34,19 +34,17 @@ class Sensor:
         self.__kalmanFilter.predict()
         self.__kalmanFilter.update(measurement)
 
-    
-
     def plot(self):
-        x = [result[0] for result in self.__kalmanFilter.getResults()]
-        y = [result[1] for result in self.__kalmanFilter.getResults()]
-        plt.plot([position[0] for position in self.__target.positions()[:-1]] , [position[1] for position in self.__target.positions()[:-1]],
+        plt.plot([position[0] for position in self.__target.positions()[:-1]],
+                 [position[1] for position in self.__target.positions()[:-1]],
                  label='True target positions')
-        plt.plot([measurement[0] for measurement in self.__measurements], [measurement[1] for measurement in self.__measurements], label='Sensor measurements')
-        plt.plot([result[0] for result in self.__kalmanFilter.getResults()], [result[1] for result in self.__kalmanFilter.getResults()], label='Kalman filter')
-        plt.plot([prior[0] for prior in self.__kalmanFilter.getPriors()], [prior[1] for prior in self.__kalmanFilter.getPriors()], label='Kalman prediction')
-    
-        #plt.gca().set_xlim(0, 100)
-        #plt.gca().set_ylim(0, 2000)
+        plt.plot([measurement[0] for measurement in self.__measurements],
+                 [measurement[1] for measurement in self.__measurements], label='Sensor measurements')
+        plt.plot([result[0] for result in self.__kalmanFilter.getResults()],
+                 [result[1] for result in self.__kalmanFilter.getResults()], label='Kalman filter')
+        plt.plot([prior[0] for prior in self.__kalmanFilter.getPriors()],
+                 [prior[1] for prior in self.__kalmanFilter.getPriors()], label='Kalman prediction')
+
         plt.legend()
         plt.title(self.__name)
         plt.show()

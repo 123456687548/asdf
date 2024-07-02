@@ -7,7 +7,7 @@ SAMPLES = 100
 
 
 def main():
-    target = Target([50, 100], [0, 10])
+    target = Target([50, 100], [2, 10])
     fusionCenter = FusionCenter()
     sensors = []
 

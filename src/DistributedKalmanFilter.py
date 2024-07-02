@@ -8,7 +8,7 @@ class DistributedKalmanFilter:
 
     def predict(self):
         prediction = np.array([1, 1])
-        
+
         self.__predictions.append(prediction)
 
     def update(self, z):

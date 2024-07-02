@@ -4,14 +4,14 @@ import numpy as np
 class KalmanFilter:
     def __init__(self):
         self.__initalized = False
-        self.__results = []
-        self.__prior = []
-        self.__priors = []
-        self.__priorCov = []
-        self.__posterior = []
-        self.__posteriorCov = []
-        self.__previousPosterior = []
-        self.__previousPosteriorCov = []
+        self.__results = np.array([])
+        self.__prior = np.array([])
+        self.__priors = np.array([])
+        self.__priorCov = np.array([])
+        self.__posterior = np.array([])
+        self.__posteriorCov = np.array([])
+        self.__previousPosterior = np.array([])
+        self.__previousPosteriorCov = np.array([])
         return
 
     def initialize(self, measurement):
@@ -23,16 +23,15 @@ class KalmanFilter:
         return self.__initalized
 
     def predict(self):
-        F = np.array([[1, 0.002],[0.0008, 1]])
+        F = np.array([[1, 0.002], [0.0008, 1]])
         Q = np.array([[10, 0.02], [0.02, 10]])
-        
-        
+
         self.__prior = np.dot(F, self.__previousPosterior)
         self.__priors.append(self.__prior)
         self.__priorCov = np.dot(F, np.dot(self.__previousPosteriorCov, F.T)) + Q
 
-    def update(self, measurement): 
-        R = np.array([[10, 0], [0, 10]]) 
+    def update(self, measurement):
+        R = np.array([[10, 0], [0, 10]])
         H = np.array([[1, 0], [0, 1]])
         v = measurement - np.dot(H, self.__prior)
         S = np.dot(H, np.dot(self.__priorCov, H.T)) + R
@@ -47,7 +46,7 @@ class KalmanFilter:
 
     def getPriors(self):
         return self.__priors
-    
+
     def getResults(self):
         return self.__results
 
