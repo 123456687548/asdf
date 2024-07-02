@@ -30,6 +30,13 @@ def main():
 
         target.move()
 
+    # Plot measurement, prediction and filtering
+    sensors[0].plot()
+    sensors[1].plot()
+    sensors[2].plot()
+    sensors[3].plot()
+    
+    # Plot naive fusion
     plt.plot([position[0] for position in target.positions()[:-1]],
              [position[1] for position in target.positions()[:-1]],
              label='True target positions')
@@ -37,7 +44,7 @@ def main():
              [position[1] for position in kalmanFusions],
              label='Fusion')
     plt.show()
-    sensors[0].plot()
+    
 
 
 if __name__ == '__main__':

@@ -67,3 +67,4 @@ class Sensor:
         plt.legend()
         plt.title(self.__name)
         plt.savefig(f'{self.__name}.png')
+        plt.show()
