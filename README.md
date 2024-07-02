@@ -11,9 +11,8 @@
   - Each sensor uses Kalman Filter for local processing.
   - Its estimate is sent to fusion center (FC) instance.
     1) The FC uses the convex combination for Track-to-Track Fusion
-    2) The FC uses Tracklet Fusion
-    3) Sensors use Federated Kalman Filter. FC uses Convex Combination
-    4)  Sensors use Distributed Kalman Filter. FC uses Convex Combination
+    2) Sensors use Federated Kalman Filter. FC uses Convex Combination
+    3) Sensors use Distributed Kalman Filter. FC uses Convex Combination
    
   
 ## Usage
