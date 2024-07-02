@@ -4,14 +4,14 @@ import numpy as np
 class KalmanFilter:
     def __init__(self):
         self.__initalized = False
-        self.__results = np.array([])
-        self.__prior = np.array([])
-        self.__priors = np.array([])
-        self.__priorCov = np.array([])
-        self.__posterior = np.array([])
-        self.__posteriorCov = np.array([])
-        self.__previousPosterior = np.array([])
-        self.__previousPosteriorCov = np.array([])
+        self.__results = []
+        self.__prior = []
+        self.__priors = []
+        self.__priorCov = []
+        self.__posterior = []
+        self.__posteriorCov = []
+        self.__previousPosterior = []
+        self.__previousPosteriorCov = []
         return
 
     def initialize(self, measurement):
