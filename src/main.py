@@ -1,3 +1,5 @@
+import math
+
 from Target import Target
 from Sensor import Sensor
 from FusionCenter import FusionCenter
@@ -31,11 +33,15 @@ def main():
         target.move()
 
     # Plot measurement, prediction and filtering
-    sensors[0].plot()
-    sensors[1].plot()
-    sensors[2].plot()
-    sensors[3].plot()
-    
+    for i, _ in enumerate(sensors):
+        plt.subplot(math.floor(len(sensors) / 2), math.ceil(len(sensors) / 2), i + 1)
+        sensors[i].plot()
+    #plt.legend() todo
+    plt.savefig('KF_Fusion.png')
+    plt.tight_layout()
+    plt.show()
+    plt.clf()
+
     # Plot naive fusion
     plt.plot([position[0] for position in target.positions()[:-1]],
              [position[1] for position in target.positions()[:-1]],

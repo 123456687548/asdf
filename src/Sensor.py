@@ -63,9 +63,4 @@ class Sensor:
                  [prior[1] for prior in self.__kalmanFilter.getPriors()], label='Kalman prediction')
         plt.plot([result[0] for result in self.__kalmanFilter.getResults()],
                  [result[1] for result in self.__kalmanFilter.getResults()], label='Kalman filter')
-
-        plt.legend()
         plt.title(self.__name)
-        plt.savefig(f'{self.__name}.png')
-        plt.show()
-        plt.clf()
