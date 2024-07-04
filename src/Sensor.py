@@ -35,6 +35,12 @@ class Sensor:
         self.__kalmanFilter.predict(self.__target.getDt())
         self.__kalmanFilter.update(measurement)
 
+    def federatedKalmanFilter(self, measurement, S):
+        if not self.__federatedKalmanFilter.isInitialized():
+            self.__federatedKalmanFilter.initialize(measurement, S)
+        self.__federatedKalmanFilter.predict(self.__target.getDt(), S)
+        self.__federatedKalmanFilter.update(measurement)
+
     def getLastPosterior(self, modus):
         match modus:
             case FilterModus.KALMAN_FILTER:
@@ -53,7 +59,7 @@ class Sensor:
             case FilterModus.FEDERATED_KALMAN_FILTER:
                 return self.__federatedKalmanFilter.getPosteriorCov()
 
-    def plot(self):
+    def plotKalmanFilter(self):
         plt.plot([position[0] for position in self.__target.positions()[:-1]],
                  [position[1] for position in self.__target.positions()[:-1]],
                  label='True target positions')
@@ -63,4 +69,16 @@ class Sensor:
                  [prior[1] for prior in self.__kalmanFilter.getPriors()], label='Kalman prediction')
         plt.plot([result[0] for result in self.__kalmanFilter.getResults()],
                  [result[1] for result in self.__kalmanFilter.getResults()], label='Kalman filter')
+        plt.title(self.__name)
+
+    def plotFederatedKalmanFilter(self):
+        plt.plot([position[0] for position in self.__target.positions()[:-1]],
+                 [position[1] for position in self.__target.positions()[:-1]],
+                 label='True target positions')
+        plt.plot([measurement[0] for measurement in self.__measurements],
+                 [measurement[1] for measurement in self.__measurements], label='Sensor measurements')
+        plt.plot([prior[0] for prior in self.__federatedKalmanFilter.getPriors()],
+                 [prior[1] for prior in self.__federatedKalmanFilter.getPriors()], label='Federated Kalman prediction')
+        plt.plot([result[0] for result in self.__federatedKalmanFilter.getResults()],
+                 [result[1] for result in self.__federatedKalmanFilter.getResults()], label='Federated Kalman filter')
         plt.title(self.__name)
