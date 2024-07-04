@@ -38,8 +38,17 @@ class Sensor:
     def federatedKalmanFilter(self, measurement, S):
         if not self.__federatedKalmanFilter.isInitialized():
             self.__federatedKalmanFilter.initialize(measurement, S)
-        self.__federatedKalmanFilter.predict(self.__target.getDt(), S)
+        self.__federatedKalmanFilter.predict(self.__target.getDt())
         self.__federatedKalmanFilter.update(measurement)
+
+    def distributedKalmanFilter(self, measurement, S):
+        if not self.__distributedKalmanFilter.isInitialized():
+            self.__distributedKalmanFilter.initialize(measurement, S)
+        self.__distributedKalmanFilter.predict(self.__target.getDt())
+        self.__distributedKalmanFilter.update(measurement)
+    
+    def distributedKalmanFilterGlobalization(self, sensors):
+        self.__distributedKalmanFilter.globalization(sensors)
 
     def getLastPosterior(self, modus):
         match modus:
@@ -81,4 +90,16 @@ class Sensor:
                  [prior[1] for prior in self.__federatedKalmanFilter.getPriors()], label='Federated Kalman prediction')
         plt.plot([result[0] for result in self.__federatedKalmanFilter.getResults()],
                  [result[1] for result in self.__federatedKalmanFilter.getResults()], label='Federated Kalman filter')
+        plt.title(self.__name)
+        
+    def plotDistributedKalmanFilter(self):
+        plt.plot([position[0] for position in self.__target.positions()[:-1]],
+                 [position[1] for position in self.__target.positions()[:-1]],
+                 label='True target positions')
+        plt.plot([measurement[0] for measurement in self.__measurements],
+                 [measurement[1] for measurement in self.__measurements], label='Sensor measurements')
+        plt.plot([prior[0] for prior in self.__distributedKalmanFilter.getPriors()],
+                 [prior[1] for prior in self.__distributedKalmanFilter.getPriors()], label='Distributed Kalman prediction')
+        plt.plot([result[0] for result in self.__distributedKalmanFilter.getResults()],
+                 [result[1] for result in self.__distributedKalmanFilter.getResults()], label='Distributed Kalman filter')
         plt.title(self.__name)
