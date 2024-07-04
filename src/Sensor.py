@@ -32,7 +32,7 @@ class Sensor:
     def kalmanFilter(self, measurement):
         if not self.__kalmanFilter.isInitialized():
             self.__kalmanFilter.initialize(measurement)
-        self.__kalmanFilter.predict()
+        self.__kalmanFilter.predict(self.__target.getDt())
         self.__kalmanFilter.update(measurement)
 
     def getLastPosterior(self, modus):
@@ -68,3 +68,4 @@ class Sensor:
         plt.title(self.__name)
         plt.savefig(f'{self.__name}.png')
         plt.show()
+        plt.clf()

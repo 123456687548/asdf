@@ -12,27 +12,31 @@ class KalmanFilter:
         self.__posteriorCov = []
         self.__previousPosterior = []
         self.__previousPosteriorCov = []
+        self.__I = np.array([[1, 0], [0, 1]])
+        self.__O = np.array([[0, 0], [0, 0]])
         return
 
     def initialize(self, measurement):
-        self.__previousPosterior = measurement
-        self.__previousPosteriorCov = np.array([[100, 0], [0, 100]])
+        self.__previousPosterior = np.array(np.append(measurement, [0,0]))
+        self.__previousPosteriorCov = np.block([[self.__I, self.__O], [self.__O, self.__I]])
         self.__initalized = True
 
     def isInitialized(self):
         return self.__initalized
 
-    def predict(self):
-        F = np.array([[1, 0.002], [0.0008, 1]])
-        Q = np.array([[10, 0.02], [0.02, 10]])
+    def predict(self, dt):
+        I = self.__I
+        O = self.__O
+        F = np.block([[I, dt*I], [O, I]])
+        Q = np.block([[0.25*dt**4*I, 0.3*dt**2*I], [0.3*dt**2*I, dt*I]])
 
-        self.__prior = np.dot(F, self.__previousPosterior)
+        self.__prior = np.matmul(F, self.__previousPosterior)
         self.__priors.append(self.__prior)
         self.__priorCov = np.dot(F, np.dot(self.__previousPosteriorCov, F.T)) + Q
 
     def update(self, measurement):
         R = np.array([[10, 0], [0, 10]])
-        H = np.array([[1, 0], [0, 1]])
+        H = np.array([[1, 0, 0, 0], [0, 1, 0, 0]])
         v = measurement - np.dot(H, self.__prior)
         S = np.dot(H, np.dot(self.__priorCov, H.T)) + R
         W = np.dot(self.__priorCov, np.dot(H.T, np.linalg.inv(S)))

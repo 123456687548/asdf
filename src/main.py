@@ -43,9 +43,12 @@ def main():
     plt.plot([position[0] for position in kalmanFusions],
              [position[1] for position in kalmanFusions],
              label='Fusion')
+    plt.legend()
+    plt.title('KF_Fusion')
+    plt.savefig('KF_Fusion.png')
     plt.show()
+    plt.clf()
     
-
 
 if __name__ == '__main__':
     main()
