@@ -7,7 +7,7 @@ from Modus import FilterModus
 import matplotlib.pyplot as plt
 
 SENSOR_AMOUNT = 4
-SAMPLES = 30
+SAMPLES = 100
 
 
 def main():
