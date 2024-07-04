@@ -37,7 +37,7 @@ def main():
         plt.subplot(math.floor(len(sensors) / 2), math.ceil(len(sensors) / 2), i + 1)
         sensors[i].plot()
     #plt.legend() todo
-    plt.savefig('KF_Fusion.png')
+    plt.savefig('plots/KalmanFilter.png')
     plt.tight_layout()
     plt.show()
     plt.clf()
@@ -48,10 +48,10 @@ def main():
              label='True target positions')
     plt.plot([position[0] for position in kalmanFusions],
              [position[1] for position in kalmanFusions],
-             label='Fusion')
+             label='Fusion (Convex Combination)')
     plt.legend()
-    plt.title('KF_Fusion')
-    plt.savefig('KF_Fusion.png')
+    plt.title('KF in Sensors and Convex Combination in FC')
+    plt.savefig('plots/KF_Fusion.png')
     plt.show()
     plt.clf()
     
