@@ -1,6 +1,7 @@
 import numpy as np
 from Modus import FilterModus
 
+
 class DistributedKalmanFilter:
     def __init__(self):
         self.__initalized = False
@@ -19,7 +20,7 @@ class DistributedKalmanFilter:
 
     def initialize(self, measurement, S):
         self.__S = S
-        self.__globalizedPosterior = np.array(np.append(measurement, [0,0]))
+        self.__globalizedPosterior = np.array(np.append(measurement, [0, 0]))
         self.__globalizedPosteriorCov = np.block([[self.__I, self.__O], [self.__O, self.__I]])
         self.__initalized = True
 
@@ -27,10 +28,10 @@ class DistributedKalmanFilter:
         return self.__initalized
 
     def globalization(self, sensors):
-        globalizedPosteriorCov = np.zeros((4,4))
+        globalizedPosteriorCov = np.zeros((4, 4))
 
         for sensor in sensors:
-            globalizedPosteriorCov += np.linalg.inv(sensor.getLastPosteriorCov(FilterModus.DISTRIBUTED_KALMAN_FILTER)) 
+            globalizedPosteriorCov += np.linalg.inv(sensor.getLastPosteriorCov(FilterModus.DISTRIBUTED_KALMAN_FILTER))
         self.__globalizedPosteriorCov = self.__S * np.linalg.inv(globalizedPosteriorCov)
 
         self.__globalizedPosterior = np.dot(globalizedPosteriorCov, np.dot(np.linalg.inv(self.__posteriorCov), self.__posterior))
@@ -39,10 +40,10 @@ class DistributedKalmanFilter:
         S = self.__S
         I = self.__I
         O = self.__O
-        F = np.block([[I, dt*I], [O, I]])
-        Q = np.block([[0.25*dt**4*I, 0.3*dt**2*I], [0.3*dt**2*I, dt*I]])
+        F = np.block([[I, dt * I], [O, I]])
+        Q = np.block([[0.25 * dt ** 4 * I, 0.3 * dt ** 2 * I], [0.3 * dt ** 2 * I, dt * I]])
 
-        self.__prior = np.matmul(F, self.__globalizedPosterior)
+        self.__prior = np.dot(F, self.__globalizedPosterior)
         self.__priors.append(self.__prior)
         self.__priorCov = np.dot(F, np.dot(self.__globalizedPosteriorCov, F.T)) + S * Q
 

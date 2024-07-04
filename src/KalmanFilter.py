@@ -17,7 +17,7 @@ class KalmanFilter:
         return
 
     def initialize(self, measurement):
-        self.__previousPosterior = np.array(np.append(measurement, [0,0]))
+        self.__previousPosterior = np.array(np.append(measurement, [0, 0]))
         self.__previousPosteriorCov = np.block([[self.__I, self.__O], [self.__O, self.__I]])
         self.__initalized = True
 
@@ -27,8 +27,8 @@ class KalmanFilter:
     def predict(self, dt):
         I = self.__I
         O = self.__O
-        F = np.block([[I, dt*I], [O, I]])
-        Q = np.block([[0.25*dt**4*I, 0.3*dt**2*I], [0.3*dt**2*I, dt*I]])
+        F = np.block([[I, dt * I], [O, I]])
+        Q = np.block([[0.25 * dt ** 4 * I, 0.3 * dt ** 2 * I], [0.3 * dt ** 2 * I, dt * I]])
 
         self.__prior = np.matmul(F, self.__previousPosterior)
         self.__priors.append(self.__prior)

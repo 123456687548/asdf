@@ -46,7 +46,7 @@ class Sensor:
             self.__distributedKalmanFilter.initialize(measurement, S)
         self.__distributedKalmanFilter.predict(self.__target.getDt())
         self.__distributedKalmanFilter.update(measurement)
-    
+
     def distributedKalmanFilterGlobalization(self, sensors):
         self.__distributedKalmanFilter.globalization(sensors)
 
@@ -91,7 +91,7 @@ class Sensor:
         plt.plot([result[0] for result in self.__federatedKalmanFilter.getResults()],
                  [result[1] for result in self.__federatedKalmanFilter.getResults()], label='Federated Kalman filter')
         plt.title(self.__name)
-        
+
     def plotDistributedKalmanFilter(self):
         plt.plot([position[0] for position in self.__target.positions()[:-1]],
                  [position[1] for position in self.__target.positions()[:-1]],

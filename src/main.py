@@ -39,7 +39,7 @@ def main():
 
         federatedKalmanFusion = fusionCenter.convexCombination(FilterModus.FEDERATED_KALMAN_FILTER)
         federatedKalmanFusions.append(federatedKalmanFusion)
-        
+
         distributedKalmanFusion = fusionCenter.convexCombination(FilterModus.DISTRIBUTED_KALMAN_FILTER)
         distributedKalmanFusions.append(distributedKalmanFusion)
 
@@ -49,7 +49,7 @@ def main():
     for i, _ in enumerate(sensors):
         plt.subplot(math.floor(len(sensors) / 2), math.ceil(len(sensors) / 2), i + 1)
         sensors[i].plotKalmanFilter()
-    #plt.legend()# todo
+    # plt.legend()# todo
     plt.savefig('plots/KalmanFilter.png')
     plt.tight_layout()
     plt.show()
@@ -67,17 +67,17 @@ def main():
     plt.savefig('plots/KF_Fusion.png')
     plt.show()
     plt.clf()
-    
+
     # Plot measurement, prediction and filtering for Federated Kalman Filter
     for i, _ in enumerate(sensors):
         plt.subplot(math.floor(len(sensors) / 2), math.ceil(len(sensors) / 2), i + 1)
         sensors[i].plotFederatedKalmanFilter()
-    #plt.legend() todo
+    # plt.legend() todo
     plt.savefig('plots/FederatedKalmanFilter.png')
     plt.tight_layout()
     plt.show()
     plt.clf()
-    
+
     # Plot FKF_Fusion
     plt.plot([position[0] for position in target.positions()[:-1]],
              [position[1] for position in target.positions()[:-1]],
@@ -90,17 +90,17 @@ def main():
     plt.savefig('plots/FKF_Fusion.png')
     plt.show()
     plt.clf()
-    
+
     # Plot measurement, prediction and filtering for Distributed Kalman Filter
     for i, _ in enumerate(sensors):
         plt.subplot(math.floor(len(sensors) / 2), math.ceil(len(sensors) / 2), i + 1)
         sensors[i].plotDistributedKalmanFilter()
-    plt.legend()# todo
+    plt.legend()  # todo
     plt.savefig('plots/DistributedKalmanFilter.png')
     plt.tight_layout()
     plt.show()
     plt.clf()
-    
+
     # Plot DKF_Fusion
     plt.plot([position[0] for position in target.positions()[:-1]],
              [position[1] for position in target.positions()[:-1]],
@@ -113,6 +113,7 @@ def main():
     plt.savefig('plots/DKF_Fusion.png')
     plt.show()
     plt.clf()
+
 
 if __name__ == '__main__':
     main()
