@@ -1,9 +1,15 @@
 import numpy as np
+import matplotlib.pyplot as plt
+
+from Modus import FilterModus
 
 
 class FusionCenter:
     def __init__(self):
         self.__sensors = []
+        self.kalmanFusions = []
+        self.federatedKalmanFusions = []
+        self.distributedKalmanFusions = []
 
     def convexCombination(self, modus):
         fused_x = 0
@@ -20,7 +26,40 @@ class FusionCenter:
 
         fused_x = np.dot(fused_P, fused_x)
 
-        return fused_x
+        match modus:
+            case FilterModus.KALMAN_FILTER:
+                self.kalmanFusions.append(fused_x)
+            case FilterModus.DISTRIBUTED_KALMAN_FILTER:
+                self.distributedKalmanFusions.append(fused_x)
+            case FilterModus.FEDERATED_KALMAN_FILTER:
+                self.federatedKalmanFusions.append(fused_x)
 
     def addSensor(self, sensor):
         self.__sensors.append(sensor)
+
+    def plot(self, target, modus):
+        plt.plot([position[0] for position in target.positions()[:-1]],
+                 [position[1] for position in target.positions()[:-1]],
+                 label='True target positions')
+        match modus:
+            case FilterModus.KALMAN_FILTER:
+                plt.plot([position[0] for position in self.kalmanFusions],
+                         [position[1] for position in self.kalmanFusions],
+                         label='Fusion (Convex Combination)')
+                plt.title('Kalman Filter in Sensors \n and Convex Combination in FC')
+                plt.savefig('../plots/KF_Fusion.png')
+            case FilterModus.DISTRIBUTED_KALMAN_FILTER:
+                plt.plot([position[0] for position in self.distributedKalmanFusions],
+                         [position[1] for position in self.distributedKalmanFusions],
+                         label='Fusion (Convex Combination)')
+                plt.title('Distributed Kalman Filter in Sensors \n and Convex Combination in FC')
+                plt.savefig('../plots/DKF_Fusion.png')
+            case FilterModus.FEDERATED_KALMAN_FILTER:
+                plt.plot([position[0] for position in self.federatedKalmanFusions],
+                         [position[1] for position in self.federatedKalmanFusions],
+                         label='Fusion (Convex Combination)')
+                plt.title('Federated Kalman Filter in Sensors \n and Convex Combination in FC')
+                plt.savefig('../plots/FKF_Fusion.png')
+        plt.legend()
+        plt.show()
+        plt.clf()

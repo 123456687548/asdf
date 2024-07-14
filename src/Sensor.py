@@ -99,7 +99,9 @@ class Sensor:
         plt.plot([measurement[0] for measurement in self.__measurements],
                  [measurement[1] for measurement in self.__measurements], label='Sensor measurements')
         plt.plot([prior[0] for prior in self.__distributedKalmanFilter.getPriors()],
-                 [prior[1] for prior in self.__distributedKalmanFilter.getPriors()], label='Distributed Kalman prediction')
+                 [prior[1] for prior in self.__distributedKalmanFilter.getPriors()],
+                 label='Distributed Kalman prediction')
         plt.plot([result[0] for result in self.__distributedKalmanFilter.getResults()],
-                 [result[1] for result in self.__distributedKalmanFilter.getResults()], label='Distributed Kalman filter')
+                 [result[1] for result in self.__distributedKalmanFilter.getResults()],
+                 label='Distributed Kalman filter')
         plt.title(self.__name)

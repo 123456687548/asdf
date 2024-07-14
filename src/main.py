@@ -1,4 +1,5 @@
 import math
+import os
 
 from Target import Target
 from Sensor import Sensor
@@ -11,12 +12,14 @@ SAMPLES = 100
 
 
 def main():
+    try:
+        os.mkdir('../plots')
+    except OSError:
+        pass
+
     target = Target([50, 100], [2, 10])
     fusionCenter = FusionCenter()
     sensors = []
-    kalmanFusions = []
-    federatedKalmanFusions = []
-    distributedKalmanFusions = []
 
     # create Sensors
     for i in range(0, SENSOR_AMOUNT):
@@ -34,83 +37,44 @@ def main():
         for sensor in sensors:
             sensor.distributedKalmanFilterGlobalization(sensors)
 
-        kalmanFusion = fusionCenter.convexCombination(FilterModus.KALMAN_FILTER)
-        kalmanFusions.append(kalmanFusion)
-
-        federatedKalmanFusion = fusionCenter.convexCombination(FilterModus.FEDERATED_KALMAN_FILTER)
-        federatedKalmanFusions.append(federatedKalmanFusion)
-
-        distributedKalmanFusion = fusionCenter.convexCombination(FilterModus.DISTRIBUTED_KALMAN_FILTER)
-        distributedKalmanFusions.append(distributedKalmanFusion)
+        fusionCenter.convexCombination(FilterModus.KALMAN_FILTER)
+        fusionCenter.convexCombination(FilterModus.FEDERATED_KALMAN_FILTER)
+        fusionCenter.convexCombination(FilterModus.DISTRIBUTED_KALMAN_FILTER)
 
         target.move()
 
     # Plot measurement, prediction and filtering for Kalman Filter
-    for i, _ in enumerate(sensors):
-        plt.subplot(math.floor(len(sensors) / 2), math.ceil(len(sensors) / 2), i + 1)
-        sensors[i].plotKalmanFilter()
-    # plt.legend()# todo
-    plt.savefig('plots/KalmanFilter.png')
-    plt.tight_layout()
-    plt.show()
-    plt.clf()
+    subplot(sensors, FilterModus.KALMAN_FILTER, '../plots/KalmanFilter.png')
 
     # Plot KF_Fusion
-    plt.plot([position[0] for position in target.positions()[:-1]],
-             [position[1] for position in target.positions()[:-1]],
-             label='True target positions')
-    plt.plot([position[0] for position in kalmanFusions],
-             [position[1] for position in kalmanFusions],
-             label='Fusion (Convex Combination)')
-    plt.legend()
-    plt.title('Kalman Filter in Sensors \n and Convex Combination in FC')
-    plt.savefig('plots/KF_Fusion.png')
-    plt.show()
-    plt.clf()
+    fusionCenter.plot(target, FilterModus.KALMAN_FILTER)
 
     # Plot measurement, prediction and filtering for Federated Kalman Filter
-    for i, _ in enumerate(sensors):
-        plt.subplot(math.floor(len(sensors) / 2), math.ceil(len(sensors) / 2), i + 1)
-        sensors[i].plotFederatedKalmanFilter()
-    # plt.legend() todo
-    plt.savefig('plots/FederatedKalmanFilter.png')
-    plt.tight_layout()
-    plt.show()
-    plt.clf()
+    subplot(sensors, FilterModus.FEDERATED_KALMAN_FILTER, '../plots/FederatedKalmanFilter.png')
 
     # Plot FKF_Fusion
-    plt.plot([position[0] for position in target.positions()[:-1]],
-             [position[1] for position in target.positions()[:-1]],
-             label='True target positions')
-    plt.plot([position[0] for position in federatedKalmanFusions],
-             [position[1] for position in federatedKalmanFusions],
-             label='Fusion (Convex Combination)')
-    plt.legend()
-    plt.title('Federated Kalman Filter in Sensors \n and Convex Combination in FC')
-    plt.savefig('plots/FKF_Fusion.png')
-    plt.show()
-    plt.clf()
+    fusionCenter.plot(target, FilterModus.FEDERATED_KALMAN_FILTER)
 
     # Plot measurement, prediction and filtering for Distributed Kalman Filter
-    for i, _ in enumerate(sensors):
-        plt.subplot(math.floor(len(sensors) / 2), math.ceil(len(sensors) / 2), i + 1)
-        sensors[i].plotDistributedKalmanFilter()
-    plt.legend()  # todo
-    plt.savefig('plots/DistributedKalmanFilter.png')
-    plt.tight_layout()
-    plt.show()
-    plt.clf()
+    subplot(sensors, FilterModus.DISTRIBUTED_KALMAN_FILTER, '../plots/DistributedKalmanFilter.png')
 
     # Plot DKF_Fusion
-    plt.plot([position[0] for position in target.positions()[:-1]],
-             [position[1] for position in target.positions()[:-1]],
-             label='True target positions')
-    plt.plot([position[0] for position in distributedKalmanFusions],
-             [position[1] for position in distributedKalmanFusions],
-             label='Fusion (Convex Combination)')
-    plt.legend()
-    plt.title('Distributed Kalman Filter in Sensors\n and Convex Combination in FC')
-    plt.savefig('plots/DKF_Fusion.png')
+    fusionCenter.plot(target, FilterModus.DISTRIBUTED_KALMAN_FILTER)
+
+
+def subplot(sensors, modus, fileName):
+    for i, _ in enumerate(sensors):
+        plt.subplot(math.floor(len(sensors) / 2), math.ceil(len(sensors) / 2), i + 1)
+        match modus:
+            case FilterModus.KALMAN_FILTER:
+                sensors[i].plotKalmanFilter()
+            case FilterModus.DISTRIBUTED_KALMAN_FILTER:
+                sensors[i].plotDistributedKalmanFilter()
+            case FilterModus.FEDERATED_KALMAN_FILTER:
+                sensors[i].plotFederatedKalmanFilter()
+    plt.legend()  # todo
+    plt.savefig(fileName)
+    plt.tight_layout()
     plt.show()
     plt.clf()
 
