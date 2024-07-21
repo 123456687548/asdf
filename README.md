@@ -22,3 +22,29 @@ python -m venv .venv
 pip install -r requirements.txt
 python src/main.py
 ```
+# Kalman Filter
+Per sensor result of local kalman filter processing
+
+![Kalman Filter](plots/KalmanFilter.png "Kalman Filter")
+
+With convex combination fused
+
+![Kalman Filter convex combination](plots/KF_Fusion.png "Kalman Filter convex combination")
+
+# Federated Kalman Filter
+Per sensor result of local federated kalman filter processing
+
+![Federated Kalman Filter](plots/FederatedKalmanFilter.png "Federated Kalman Filter")
+
+With convex combination fused
+
+![Federated Kalman Filter convex combination](plots/FKF_Fusion.png "Federated Kalman Filter convex combination")
+
+# Distributed Kalman Filter
+Per sensor result of local distributed kalman filter processing
+
+![Distributed Kalman Filter](plots/DistributedKalmanFilter.png "Distributed Kalman Filter")
+
+With convex combination fused
+
+![Distributed Kalman Filter convex combination](plots/DKF_Fusion.png "Distributed Kalman Filter convex combination")
