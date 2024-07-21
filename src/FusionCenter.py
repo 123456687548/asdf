@@ -37,29 +37,24 @@ class FusionCenter:
     def addSensor(self, sensor):
         self.__sensors.append(sensor)
 
-    def plot(self, target, modus):
+    def plot(self, target, modus, fileName, title):
+        fig = plt.figure(figsize=(5, 5))
         plt.plot([position[0] for position in target.positions()[:-1]],
                  [position[1] for position in target.positions()[:-1]],
                  label='True target positions')
+        data = []
         match modus:
             case FilterModus.KALMAN_FILTER:
-                plt.plot([position[0] for position in self.__kalmanFusions],
-                         [position[1] for position in self.__kalmanFusions],
-                         label='Fusion (Convex Combination)')
-                plt.title('Kalman Filter in Sensors \n and Convex Combination in FC')
-                plt.savefig('../plots/KF_Fusion.png')
+                data = self.__kalmanFusions
             case FilterModus.DISTRIBUTED_KALMAN_FILTER:
-                plt.plot([position[0] for position in self.__distributedKalmanFusions],
-                         [position[1] for position in self.__distributedKalmanFusions],
-                         label='Fusion (Convex Combination)')
-                plt.title('Distributed Kalman Filter in Sensors \n and Convex Combination in FC')
-                plt.savefig('../plots/DKF_Fusion.png')
+                data = self.__distributedKalmanFusions
             case FilterModus.FEDERATED_KALMAN_FILTER:
-                plt.plot([position[0] for position in self.__federatedKalmanFusions],
-                         [position[1] for position in self.__federatedKalmanFusions],
-                         label='Fusion (Convex Combination)')
-                plt.title('Federated Kalman Filter in Sensors \n and Convex Combination in FC')
-                plt.savefig('../plots/FKF_Fusion.png')
+                data = self.__federatedKalmanFusions
+        plt.plot([position[0] for position in data],
+                 [position[1] for position in data],
+                 label='Fusion (Convex Combination)')
+        plt.title(title)
         plt.legend()
+        plt.savefig(fileName, dpi=fig.dpi)
         plt.show()
         plt.clf()
